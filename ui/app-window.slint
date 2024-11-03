@@ -1,0 +1,30 @@
+import { Button, VerticalBox, TabWidget } from "std-widgets.slint";
+import { SideBar } from "widgets/side_bar.slint";
+import { PageActionList } from "page/page_action_list.slint";
+import { PageActionAdd } from "page/page_action_add.slint";
+import { PageSettings } from "page/page_settings.slint";
+
+export component AppWindow inherits Window {
+    preferred-width: 600px;
+    preferred-height: 400px;
+    title: @tr("MonkeyActions");
+    icon: @image-url("../assets/logo.png");
+    property <int> current-page <=> side-bar.select-index;
+    HorizontalLayout {
+        //left side bar
+        side-bar := SideBar {
+            main-items: [
+                { icon:@image-url("../assets/icons/actions.svg") },
+                { icon:@image-url("../assets/icons/task_list.svg") },
+            ];
+            bottom-items: [
+                { icon:@image-url("../assets/icons/settings.svg") },
+            ];
+        }
+
+        //pages sel
+        if(current-page == 0): PageActionList { }
+        if(current-page == 1): PageActionAdd { }
+        if(current-page == 2): PageSettings { }
+    }
+}

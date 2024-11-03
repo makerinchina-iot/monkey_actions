@@ -1,0 +1,81 @@
+
+import { HorizontalBox, Palette } from "std-widgets.slint";
+export component SideBar {
+    in property <[{icon:image}]> main-items;
+    in property <[{icon:image}]> bottom-items;
+    out property <int> select-index: 0;
+    // color
+    function isDarkMode() -> bool {
+        return Palette.color-scheme == ColorScheme.dark;
+    }
+    property <length> icon-size:32px;
+    property <color> back-color:isDarkMode() ? #363636 : #d0d0d0;
+    property <brush> icon-color:isDarkMode() ? #d0d0d0 : #000000;
+    property <color> selected-color: isDarkMode() ? #7a7a7a : #f0f0f0;
+    Rectangle {
+        background: back-color;
+        VerticalLayout {
+            //main items
+            VerticalLayout {
+                alignment: start;
+                spacing: 6px;
+                for item[i] in main-items: Rectangle {
+                    HorizontalLayout {
+                        padding: 10px;
+                        icon := Image {
+                            source: item.icon;
+                            width: icon-size - 6px;
+                            colorize: icon-color;
+                        }
+                    }
+
+                    ta2 := TouchArea {
+                        clicked => {
+                            root.select-index = i;
+                        }
+                    }
+
+                    states [
+                        hovered when ta2.has-hover: {
+                            background: selected-color;
+                        }
+                        seledted when root.select-index == i: {
+                            background: selected-color;
+                        }
+                    ]
+                }
+            }
+
+            //bottom items
+            VerticalLayout {
+                alignment: end;
+                spacing: 6px;
+                for item[i] in bottom-items: Rectangle {
+                    HorizontalLayout {
+                        padding: 10px;
+                        icon3 := Image {
+                            source: item.icon;
+                            width: icon-size - 6px;
+                            colorize: icon-color;
+                        }
+                    }
+
+                    ta3 := TouchArea {
+                        clicked => {
+                            root.select-index = i + main-items.length;
+                        }
+                    }
+
+                    states [
+                        hovered when ta3.has-hover: {
+                            background: selected-color;
+                        }
+                        seledted when (root.select-index == (i + main-items.length)): {
+                            background: selected-color;
+                        }
+                    ]
+                }
+            }
+        }
+    }
+}
